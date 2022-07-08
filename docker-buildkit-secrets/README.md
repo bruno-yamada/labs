@@ -15,5 +15,7 @@ removed from the layers after and thus from the final build
 - provide the secrets to the `docker build` command
 - mount the secrets when you call `RUN` inside your `Dockerfile`
 
-Check [build.sh](./build.sh) and [Dockerfile](./Dockerfile) to see how it can be
-used
+## In practice
+- [build.sh](./build.sh) enables buildkit and executes `docker build` with the
+  `--secret` param
+- [Dockerfile](./Dockerfile) makes use of provided secret
