@@ -10,6 +10,6 @@ EOF
 ## Provide the file as a secret named "build-secrets"
 docker build \
   -t my-img \
-  --progress=plain \ # optional, plain-text build output
+  --progress=plain \
   --secret id=build-secrets,src=.build-secrets.env \
   .
