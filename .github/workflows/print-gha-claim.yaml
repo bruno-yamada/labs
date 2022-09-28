@@ -24,12 +24,13 @@ jobs:
             -H "Content-Type: application/json" \
             -d "{}" "${ACTIONS_ID_TOKEN_REQUEST_URL}" \
               | jq -r '.value')
-          TOKEN_PAYLOAD=$(echo -n "$ID_TOKEN" | cut -d '.' -f2)
+          PAYLOAD_RAW=$(echo -n "$ID_TOKEN" | cut -d '.' -f2)
 
           # throws error due to padding
-          # echo -n "$TOKEN_PAYLOAD" | base64 -d
+          # echo -n "$PAYLOAD_RAW" | base64 -d
 
           # fixes padding error
           # ref: https://unix.stackexchange.com/questions/631501/base64-d-decodes-but-says-invalid-input
-          echo "$TOKEN_PAYLOAD"==== | fold -w 4 | sed '$ d' | tr -d '\n' | base64 --decode
+          PAYLOAD=$(echo "$PAYLOAD_RAW"==== | fold -w 4 | sed '$ d' | tr -d '\n' | base64 --decode)
+          echo "$PAYLOAD" | jq
 
