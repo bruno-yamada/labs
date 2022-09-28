@@ -18,7 +18,18 @@ jobs:
         run: echo $ACTIONS_ID_TOKEN_REQUEST_URL
       - name: Print token payload
         run: |
-          ID_TOKEN=$(curl --silent -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}"  -H "Accept: application/json; api-version=2.0" -H "Content-Type: application/json" -d "{}" "${ACTIONS_ID_TOKEN_REQUEST_URL}" | jq -r '.value')
+          ID_TOKEN=$(curl -s \
+            -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+            -H "Accept: application/json; api-version=2.0" \
+            -H "Content-Type: application/json" \
+            -d "{}" "${ACTIONS_ID_TOKEN_REQUEST_URL}" \
+              | jq -r '.value')
           TOKEN_PAYLOAD=$(echo -n "$ID_TOKEN" | cut -d '.' -f2)
-          echo -n "$TOKEN_PAYLOAD" | base64 -di
+
+          # throws error due to padding
+          # echo -n "$TOKEN_PAYLOAD" | base64 -d
+
+          # fixes padding error
+          # ref: https://unix.stackexchange.com/questions/631501/base64-d-decodes-but-says-invalid-input
+          echo "$TOKEN_PAYLOAD"==== | fold -w 4 | sed '$ d' | tr -d '\n' | base64 --decode
 
