@@ -20,4 +20,5 @@ jobs:
         run: |
           ID_TOKEN=$(curl --silent -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}"  -H "Accept: application/json; api-version=2.0" -H "Content-Type: application/json" -d "{}" "${ACTIONS_ID_TOKEN_REQUEST_URL}" | jq -r '.value')
           TOKEN_PAYLOAD=$(cut -d '.' -f2 <<< $ID_TOKEN)
-          echo $TOKEN_PAYLOAD
+          echo -n "$TOKEN_PAYLOAD" | base64 -d
+
