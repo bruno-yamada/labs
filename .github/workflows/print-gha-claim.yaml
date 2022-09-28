@@ -1,0 +1,22 @@
+name: Print GHA claim (oidc)
+
+permissions:
+  id-token: write
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  print_gha_claim:
+    runs-on: ubuntu-latest
+    #environment:
+    # name: prod
+    steps:
+      - name: Print ACTIONS_ID_TOKEN_REQUEST_URL
+        run: echo $ACTIONS_ID_TOKEN_REQUEST_URL
+      - name: Print token payload
+        run: |
+          ID_TOKEN=$(curl --silent -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}"  -H "Accept: application/json; api-version=2.0" -H "Content-Type: application/json" -d "{}" "${ACTIONS_ID_TOKEN_REQUEST_URL}" | jq -r '.value')
+          echo $ID_TOKEN | base64
