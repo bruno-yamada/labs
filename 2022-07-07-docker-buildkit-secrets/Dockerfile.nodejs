@@ -1,0 +1,9 @@
+FROM node:22
+
+WORKDIR /usr/src/app
+
+# use type=secret, so it is removed after the docker build stage
+RUN --mount=type=secret,id=npmrc,dst=/usr/src/app/.npmrc \
+  pnpm install
+
+# ... and then continue with image
